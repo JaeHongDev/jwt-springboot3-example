@@ -13,7 +13,6 @@ public class AuthService {
 
     public void signup(final SignupUserDto signupUserDto){
         var savedUser = this.authRepository.save(signupUserDto.toEntity());
-
     }
 
 }
