@@ -1,5 +1,6 @@
 package com.example.jwtspringboot3example.repository;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.jwtspringboot3example.entity.Users;
@@ -26,8 +27,8 @@ class AuthRepositoryImplTest {
     @Test
     void 사용자가_정상적으로_등록됩니다(){
         var unSavedUser = Users.builder().email("email").name("name").password("password").build();
-        var savedUser = authRepository.save(unSavedUser);
-
-        Assertions.assertThat(unSavedUser).isEqualTo(savedUser);
+        var savedUserId = authRepository.save(unSavedUser);
+        var savedUser = authRepository.findById(savedUserId);
+        assertThat(savedUser).isEqualTo(savedUser);
     }
 }

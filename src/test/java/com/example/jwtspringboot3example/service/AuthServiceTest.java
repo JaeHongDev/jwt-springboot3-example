@@ -33,7 +33,7 @@ class AuthServiceTest {
                 .password("password")
                 .build();
 
-        var actual = authService.signup(signupDto).id();
+        var actual = authService.signup(signupDto).userId();
         var expected = 1L;
         Assertions.assertThat(actual).isEqualTo(expected);
     }
