@@ -1,4 +1,4 @@
 package com.example.jwtspringboot3example.payload.response;
 
-public record SignupResponseDto(Long id){
+public record SignupResponseDto(Long userId) {
 }
