@@ -20,8 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController("/api/v1/auth")
 public class AuthController {
-    private final JwtDecoder jwtDecoder;
+    private final AuthService authService;
+ /*   private final JwtDecoder jwtDecoder;
     private final JwtEncoder jwtEncoder;
+
+
     @GetMapping ("/")
     public String getToken(){
         Instant now = Instant.now();
@@ -41,5 +44,11 @@ public class AuthController {
     public String decodeToken(@RequestHeader("authorization") String header){
         log.info(header);
         return jwtDecoder.decode(header).getClaims().get("scope").toString();
+    }
+*/
+    @PostMapping("/signup")
+    public String signup(@RequestBody SignupUserDto signupUserDto){
+        authService.signup(signupUserDto);
+        return "signup";
     }
 }
