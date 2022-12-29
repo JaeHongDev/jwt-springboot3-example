@@ -1,41 +1,59 @@
 package com.example.jwtspringboot3example.controller;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
-import com.example.jwtspringboot3example.config.WebSecurityConfig;
+import com.example.jwtspringboot3example.payload.response.SignupResponseDto;
+import com.example.jwtspringboot3example.service.AuthService;
+import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.DisplayNameGenerator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringBootConfiguration;
-import org.springframework.boot.test.autoconfigure.core.AutoConfigureCache;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MockMvcBuilder;
-import org.springframework.test.web.servlet.MockMvcResultMatchersDsl;
-import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 
-@WebMvcTest({AuthController.class})
-@Import(WebSecurityConfig.class)
+@WebMvcTest(AuthController.class)
+@AutoConfigureMockMvc(addFilters = false)
+@ExtendWith({MockitoExtension.class})
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 class AuthControllerTest {
 
+    @MockBean
+    private AuthService authService;
     @Autowired
     private MockMvc mockMvc;
 
-
     @Test
-    void 토큰이_반환됩니다() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/"))
-                .andExpect(MockMvcResultMatchers.content().string("token"));
+    void 실행테스트() throws Exception {
+        mockMvc.perform(get("/api/v1/auth/test"))
+                .andExpect(content().string("hello"));
     }
 
+
     @Test
-    void 토근을_검증합니다() throws Exception {
-        var token = "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJzZWxmIiwic3ViIjoibmFtZSIsImV4cCI6MTY3MjI2MTk5NSwiaWF0IjoxNjcyMjI1OTk1LCJzY29wZSI6InRlc3QifQ.g1LUhk83bbBApHdgQ7ZO-8Q__MBu4paI-ewplYpht_tk5PMlLAMwPukFzp9ara0KOpmI-zrIyuZnmZsqybESPGJHC0C4I6Jyt9OBLfZa586DJ0aACe-Nsjujp60bVrDuPaXYFGK5FmYgW3kBgfEn8JuxTw1WehPK8X9bJmvfY-YFZ8jxsjrsBOp8-1SsmWM6tZVWac31KqelmmLU5_SIsnt3WiggbVq9f0UePzw6iJZQXaHm6bKL8y8gYVZYXxzRFLIofCfpcXYriHVUROrVZRDrXEkyq2cj1a3Q9lSWD-_VZt9qoDS5nMKyjRDQ0t3rAGhXRr9tkh5rkpA1fHTzzw";
-        mockMvc.perform(MockMvcRequestBuilders.get("/token").header("authorization",token))
-                .andExpect(MockMvcResultMatchers.content().string("test"));
+    void 회원가입을_위한_사용자요청을_보내고_성공하면_응답_엔티티에_아이디를_넣어서_전달해줍니다() throws Exception {
+        given(authService.signup(any())).willReturn(new SignupResponseDto(1L));
+        mockMvc.perform(post("/api/v1/auth/signup")
+                        .content("""
+                                {
+                                    "email":"email",
+                                    "password":"password",
+                                    "name":"name"
+                                }
+                                """).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.jsonPath("userId").value("1"));
+
     }
+
+
 }
