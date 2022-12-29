@@ -6,13 +6,14 @@ import java.util.Map;
 import java.util.Optional;
 
 
-public class AuthRepositoryImpl implements AuthRepository{
-    private long id = 1L;
+public class AuthRepositoryImpl implements AuthRepository {
     private final Map<Long, Users> usersMap = new LinkedHashMap<>();
+    private long id = 1L;
+
     @Override
     public Long save(Users user) {
         this.usersMap.put(id, user);
-        return id;
+        return id++;
     }
 
     @Override
