@@ -37,4 +37,10 @@ class AuthServiceTest {
         var expected = 1L;
         Assertions.assertThat(actual).isEqualTo(expected);
     }
+
+    @Test
+    void 사용자가_로그인을_할_경우_jwt를_반환합니다() {
+
+    }
+
 }

@@ -9,7 +9,10 @@ import org.springframework.security.web.SecurityFilterChain;
 public class FilterConfig {
     @Bean
     public SecurityFilterChain doFilter(HttpSecurity http) throws Exception {
-
+        http.csrf().disable();
+        http.authorizeHttpRequests()
+                .requestMatchers("/api/v1/auth/signup").permitAll()
+                .requestMatchers("/api/v1/auth/login").permitAll();
         return http.build();
     }
 }

@@ -22,4 +22,14 @@ public class AuthRepositoryImpl implements AuthRepository {
     public Optional<Users> findById(Long userId) {
         return Optional.ofNullable(this.usersMap.get(userId));
     }
+
+    @Override
+    public Users findUserByEmail(String email) {
+        return this.usersMap.entrySet()
+                .stream()
+                .filter(entry -> entry.getValue().sameEmail(email))
+                .findAny()
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."))
+                .getValue();
+    }
 }
